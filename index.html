@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="ja" data-theme="dark">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Othello — Multiplayer</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@700;900&family=Satoshi:wght@400;500;700&family=Noto+Sans+Sinhala:wght@400;700&family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Othello — Multiplayer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@700;900&family=Satoshi:wght@400;500;700&family=Noto+Sans+Sinhala:wght@400;700&family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body class="lang-ja">
 
-<!-- Language Switcher -->
+<!-- ===== LANGUAGE SWITCHER ===== -->
 <div id="langSwitcher">
   <button class="lang-btn" data-lang="ja">日本語</button>
   <button class="lang-btn" data-lang="si">සිංහල</button>
   <button class="lang-btn" data-lang="en">EN</button>
 </div>
 
-<!-- ===== MENU ===== -->
+<!-- ===== MENU SCREEN ===== -->
 <div id="menuScreen">
   <div class="menu-logo">
     <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
@@ -65,14 +65,19 @@
     <span style="font-family:var(--font-display);font-size:var(--text-lg);font-weight:700" data-i18n="onlineMultiplayer">オンライン対戦</span>
     <span class="mode-badge online" style="margin-left:auto">BETA</span>
   </div>
+
   <div class="lobby-card" style="width:100%">
     <div class="lobby-section">
       <label class="input-label" data-i18n="yourName">あなたの名前</label>
       <input class="text-input" id="lobbyName" data-i18n-placeholder="enterName" maxlength="16">
     </div>
+
+    <!-- Create Room -->
     <div class="lobby-section">
       <h3 data-i18n="createRoom">ルームを作成</h3>
-      <p style="font-size:var(--text-sm);color:var(--color-text-muted);margin-bottom:var(--space-4)" data-i18n="createRoomDesc">ルームコードを生成して友達に共有してください。</p>
+      <p style="font-size:var(--text-sm);color:var(--color-text-muted);margin-bottom:var(--space-4)" data-i18n="createRoomDesc">
+        ルームコードを生成して友達に共有してください。
+      </p>
       <button class="btn btn-primary" id="createRoomBtn" style="width:100%" data-i18n="createRoomBtn">ルームを作成</button>
       <div id="roomCodeArea" style="display:none;margin-top:var(--space-4)">
         <label class="input-label" data-i18n="roomCodeLabel">ルームコード — 友達に共有してください</label>
@@ -80,49 +85,83 @@
           <span class="room-code-val" id="roomCodeVal">------</span>
           <button class="copy-btn" id="copyCodeBtn" data-i18n="copyBtn">コピー</button>
         </div>
-        <div style="margin-top:var(--space-3);display:flex;align-items:center;gap:var(--space-2)">
+        <div style="margin-top:var(--space-3)">
           <div class="status-pill" id="waitingPill">
-            <span class="dot-anim"></span> <span data-i18n="waitingOpponent">対戦相手を待っています…</span>
+            <span class="dot-anim"></span>
+            <span data-i18n="waitingOpponent">対戦相手を待っています…</span>
           </div>
         </div>
       </div>
     </div>
+
     <div class="divider"><span data-i18n="orDivider">または</span></div>
+
+    <!-- Join Room -->
     <div class="lobby-section">
       <h3 data-i18n="joinRoom">ルームに参加</h3>
-      <p style="font-size:var(--text-sm);color:var(--color-text-muted);margin-bottom:var(--space-4)" data-i18n="joinRoomDesc">友達が共有したルームコードを入力してください。</p>
-      <input class="text-input" id="joinCodeInput" data-i18n-placeholder="enterCode" maxlength="6" style="margin-bottom:var(--space-3);text-transform:uppercase;letter-spacing:0.12em">
+      <p style="font-size:var(--text-sm);color:var(--color-text-muted);margin-bottom:var(--space-4)" data-i18n="joinRoomDesc">
+        友達が共有したルームコードを入力してください。
+      </p>
+      <input
+        class="text-input"
+        id="joinCodeInput"
+        data-i18n-placeholder="enterCode"
+        maxlength="6"
+        style="margin-bottom:var(--space-3);text-transform:uppercase;letter-spacing:0.12em"
+      >
       <button class="btn btn-primary" id="joinRoomBtn" style="width:100%" data-i18n="joinRoomBtn">参加する</button>
       <div id="joinStatus" style="margin-top:var(--space-3);display:none">
-        <div class="status-pill" id="joinPill"><span class="dot-anim"></span> <span data-i18n="connecting">接続中…</span></div>
+        <div class="status-pill" id="joinPill">
+          <span class="dot-anim"></span>
+          <span data-i18n="connecting">接続中…</span>
+        </div>
       </div>
     </div>
   </div>
-  <p style="font-size:var(--text-xs);color:var(--color-text-faint);text-align:center;max-width:320px;line-height:1.6" data-i18n="peerNote">
-    オンラインプレイにはPeerJSを使用します。両プレイヤーはインターネット接続が必要です。
-  </p>
+
+  <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-4);width:100%;font-size:var(--text-xs);color:var(--color-text-muted);line-height:1.7">
+    <div style="font-weight:700;color:var(--color-text);margin-bottom:6px">📖 使い方 / How to play</div>
+    <ol style="padding-left:1.2em;display:flex;flex-direction:column;gap:4px">
+      <li>ルームを作成 → コードをコピーして友達に送る</li>
+      <li>友達はコードを入力して「参加する」をクリック</li>
+      <li>接続完了でゲームが自動で始まります 🎮</li>
+    </ol>
+    <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--color-border);color:var(--color-text-faint)">
+      ⚡ Firebase Realtime DB を使用 — WebRTCより安定
+    </div>
+  </div>
 </div>
 
 <!-- ===== GAME SCREEN ===== -->
 <div id="gameScreen">
+
+  <!-- Header -->
   <div class="header">
     <div class="logo-sm">
       <button class="icon-btn" id="backToMenu" data-i18n-title="backToMenu" aria-label="Back to menu">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
       </button>
       <span class="logo-sm-title" data-i18n="title">オセロ</span>
       <span class="mode-badge vs-ai" id="modeBadge">VS AI</span>
+      <span id="connDot" style="display:none;width:8px;height:8px;border-radius:50%;background:#4caf7d;box-shadow:0 0 6px #4caf7d;flex-shrink:0" title="Connected"></span>
     </div>
     <div class="header-actions">
       <button class="icon-btn active" id="hintToggle" data-i18n-title="toggleHints" aria-label="Toggle hints">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
+        </svg>
       </button>
       <button class="icon-btn" id="newGameBtn" data-i18n-title="newGame" aria-label="New game">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-5.5"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-5.5"/>
+        </svg>
       </button>
     </div>
   </div>
 
+  <!-- Score Panel -->
   <div class="score-panel">
     <div class="score-side active" id="scoreBlack">
       <div class="score-disc disc-b"></div>
@@ -141,43 +180,50 @@
     </div>
   </div>
 
+  <!-- Board -->
   <div style="width:100%">
-    <div class="board-bg"><div id="board"></div></div>
+    <div class="board-bg">
+      <div id="board"></div>
+    </div>
   </div>
 
+  <!-- Difficulty (AI mode only) -->
   <div style="width:100%;display:flex;flex-direction:column;gap:var(--space-3)" id="diffSection">
     <div>
       <span class="diff-label" data-i18n="difficulty">難易度</span>
       <div class="diff-options">
         <button class="diff-btn selected" data-diff="1" data-i18n="easy">かんたん</button>
-        <button class="diff-btn" data-diff="3" data-i18n="medium">ふつう</button>
-        <button class="diff-btn" data-diff="5" data-i18n="hard">むずかしい</button>
+        <button class="diff-btn"          data-diff="3" data-i18n="medium">ふつう</button>
+        <button class="diff-btn"          data-diff="5" data-i18n="hard">むずかしい</button>
       </div>
     </div>
   </div>
 
+  <!-- Start Button -->
   <div class="controls">
     <button class="btn btn-primary" id="startBtn" data-i18n="newGame">新しいゲーム</button>
   </div>
 
+  <!-- Status Message -->
   <div class="footer-info" id="statusMsg" data-i18n="clickToStart">新しいゲームをクリック</div>
-</div>
 
-<!-- End Modal -->
+</div><!-- /#gameScreen -->
+
+<!-- ===== END GAME MODAL ===== -->
 <div class="modal-overlay" id="endModal">
   <div class="modal">
     <div class="modal-icon" id="modalIcon">🎉</div>
     <div class="modal-title" id="modalTitle">Game Over</div>
     <div class="modal-score" id="modalScore"></div>
-    <div class="modal-desc" id="modalDesc"></div>
+    <div class="modal-desc"  id="modalDesc"></div>
     <div style="display:flex;gap:var(--space-2)">
       <button class="btn btn-primary" id="modalPlayAgain" style="flex:1;padding:var(--space-3)" data-i18n="playAgain">もう一度</button>
-      <button class="btn" id="modalMenu" style="flex:1;padding:var(--space-3)" data-i18n="menu">メニュー</button>
+      <button class="btn"             id="modalMenu"      style="flex:1;padding:var(--space-3)" data-i18n="menu">メニュー</button>
     </div>
   </div>
 </div>
 
-<!-- Pass Modal (local 2-player) -->
+<!-- ===== PASS DEVICE MODAL (local 2-player) ===== -->
 <div class="pass-modal-overlay" id="passModal">
   <div class="pass-modal">
     <div style="font-size:40px;margin-bottom:var(--space-4)" id="passIcon">🔄</div>
@@ -187,8 +233,8 @@
   </div>
 </div>
 
-<!-- PeerJS CDN -->
-<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="script.js" defer></script>
+<!-- Game logic -->
+<script src="game.js"></script>
+
 </body>
 </html>
