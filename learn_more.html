@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Othello — Learn More</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Space+Grotesk:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:#080d10; --surface:#0e1820; --surface2:#131f2e;
+  --border:rgba(61,142,240,0.18); --primary:#3d8ef0;
+  --purple:#9b8de8; --green:#4caf7d; --yellow:#f0c040;
+  --text:#d6e4ff; --muted:#6b7fa0; --faint:#2a3550;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
+
+/* PARTICLES */
+#bgc{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.3;}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:13px 40px;
+  background:rgba(8,13,16,0.88);backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--border);
+}
+.nav-left{display:flex;align-items:center;gap:12px;}
+.nav-left img{width:34px;height:34px;filter:drop-shadow(0 0 8px rgba(61,142,240,0.5));}
+.nav-title{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;letter-spacing:4px;color:var(--primary);text-transform:uppercase;}
+.nav-right{display:flex;gap:10px;}
+.nav-pill{
+  padding:7px 18px;border-radius:9999px;font-size:12px;font-weight:700;
+  letter-spacing:0.06em;text-decoration:none;text-transform:uppercase;
+  transition:all .2s;
+}
+.nav-pill.outline{border:1px solid var(--border);color:var(--muted);background:transparent;}
+.nav-pill.outline:hover{border-color:var(--primary);color:var(--text);}
+.nav-pill.solid{background:linear-gradient(135deg,var(--primary),var(--purple));color:#fff;border:none;box-shadow:0 3px 16px rgba(61,142,240,0.35);}
+.nav-pill.solid:hover{box-shadow:0 6px 24px rgba(61,142,240,0.55);transform:translateY(-1px);}
+
+/* SECTIONS */
+section{position:relative;z-index:1;}
+.sec{max-width:1080px;margin:0 auto;padding:96px 32px;}
+.sec-label{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--primary);margin-bottom:10px;}
+.sec-title{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;line-height:1.1;margin-bottom:14px;}
+.sec-desc{color:var(--muted);font-size:1rem;line-height:1.8;max-width:640px;}
+.glow-div{width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--primary),var(--purple),transparent);opacity:0.2;}
+
+/* HERO */
+#hero{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:120px 24px 80px;overflow:hidden;
+  background:radial-gradient(ellipse at 50% 30%, rgba(61,142,240,0.05) 0%, transparent 65%);
+}
+.hero-crumb{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(61,142,240,0.08);border:1px solid rgba(61,142,240,0.25);
+  border-radius:9999px;padding:5px 16px;margin-bottom:24px;
+  font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;
+  letter-spacing:3px;color:var(--muted);
+}
+.hero-crumb a{color:var(--primary);text-decoration:none;}
+.hero-crumb a:hover{text-decoration:underline;}
+.hero-logo-wrap{
+  position:relative;width:140px;height:140px;
+  display:flex;align-items:center;justify-content:center;margin:0 auto 32px;
+}
+.h-orbit{
+  position:absolute;inset:0;border-radius:50%;
+  border:1px solid rgba(61,142,240,0.2);
+  animation:spin 7s linear infinite;
+}
+.h-orbit:nth-child(2){inset:12px;border-color:rgba(155,141,232,0.18);animation-duration:11s;animation-direction:reverse;}
+.h-odot{position:absolute;top:-4px;left:50%;transform:translateX(-50%);width:7px;height:7px;border-radius:50%;background:var(--primary);box-shadow:0 0 9px rgba(61,142,240,0.8);}
+.h-orbit:nth-child(2) .h-odot{background:var(--purple);}
+@keyframes spin{to{transform:rotate(360deg);}}
+.hero-logo-img{width:90px;height:90px;position:relative;z-index:2;filter:drop-shadow(0 0 24px rgba(61,142,240,0.5));animation:float 4s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+.hero-hl{
+  font-family:'JetBrains Mono',monospace;
+  font-size:clamp(2.2rem,7vw,5.5rem);font-weight:700;
+  letter-spacing:10px;text-transform:uppercase;
+  background:linear-gradient(135deg,#d6e4ff 0%,var(--primary) 50%,var(--purple) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:14px;
+}
+.hero-sub{font-size:1.1rem;color:var(--muted);margin-bottom:8px;letter-spacing:0.06em;}
+.hero-jp{font-family:'Noto Sans JP',sans-serif;font-size:13px;color:#4a3e7a;letter-spacing:3px;margin-bottom:40px;}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;}
+.btn-p{padding:13px 32px;border-radius:9999px;background:linear-gradient(135deg,var(--primary),var(--purple));color:#fff;font-weight:700;font-size:13px;letter-spacing:0.08em;text-decoration:none;box-shadow:0 4px 20px rgba(61,142,240,0.35);transition:transform .2s,box-shadow .2s;display:inline-block;}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(61,142,240,0.55);}
+.btn-o{padding:13px 32px;border-radius:9999px;border:1px solid var(--border);color:var(--text);font-weight:600;font-size:13px;letter-spacing:0.08em;text-decoration:none;background:rgba(61,142,240,0.06);transition:background .2s,border-color .2s;display:inline-block;}
+.btn-o:hover{background:rgba(61,142,240,0.12);border-color:var(--primary);}
+
+/* OVERVIEW */
+#overview{background:linear-gradient(180deg,#080d10 0%,#0b121c 100%);}
+.ov-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;margin-top:48px;}
+.ov-board{display:grid;grid-template-columns:repeat(8,1fr);gap:3px;background:#0e3018;padding:8px;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,0.6),0 0 50px rgba(76,175,125,0.07);border:2px solid rgba(76,175,125,0.13);max-width:310px;}
+.bc{aspect-ratio:1;border-radius:2px;background:#1d5c2e;display:flex;align-items:center;justify-content:center;}
+.bd{width:74%;height:74%;border-radius:50%;}
+.bd.bk{background:radial-gradient(circle at 35% 30%,#4a4a4a,#1a1a1a 60%);box-shadow:0 2px 6px rgba(0,0,0,0.7);}
+.bd.wh{background:radial-gradient(circle at 35% 30%,#fff,#d8d8d8 60%);box-shadow:0 2px 4px rgba(0,0,0,0.3);}
+.ov-text p{color:var(--muted);line-height:1.85;margin-bottom:14px;font-size:.97rem;}
+.stats-row{display:flex;gap:28px;flex-wrap:wrap;margin-top:24px;}
+.stat-n{font-family:'JetBrains Mono',monospace;font-size:2.2rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
+.stat-l{font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-top:3px;}
+
+/* RULES */
+#rules{background:var(--bg);}
+.rules-cols{display:grid;grid-template-columns:1fr 1fr;gap:36px;margin-top:44px;}
+.rule-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:26px;}
+.rule-card h3{font-size:1rem;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+.rule-card ol, .rule-card ul{padding-left:1.3em;display:flex;flex-direction:column;gap:8px;}
+.rule-card li{color:var(--muted);font-size:.9rem;line-height:1.65;}
+.rule-card li strong{color:var(--text);}
+
+/* HOW TO PLAY */
+#howtoplay{background:linear-gradient(180deg,#0b121c 0%,#080d10 100%);}
+.steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:44px;}
+.step-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;position:relative;overflow:hidden;transition:border-color .2s,transform .2s;}
+.step-card:hover{border-color:var(--primary);transform:translateY(-3px);}
+.step-num{font-family:'JetBrains Mono',monospace;font-size:3rem;font-weight:700;color:var(--faint);line-height:1;margin-bottom:10px;}
+.step-title{font-size:.95rem;font-weight:700;margin-bottom:6px;}
+.step-desc{color:var(--muted);font-size:.88rem;line-height:1.6;}
+
+/* GAME MODES */
+#modes{background:var(--bg);}
+.modes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:44px;}
+.mode-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;text-align:center;transition:all .2s;}
+.mode-card:hover{border-color:var(--primary);transform:translateY(-4px);box-shadow:0 8px 28px rgba(61,142,240,0.1);}
+.mode-icon{font-size:42px;margin-bottom:14px;}
+.mode-badge-pill{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;padding:3px 10px;border-radius:9999px;margin-bottom:10px;}
+.mb-ai{color:var(--green);background:rgba(76,175,125,0.1);border:1px solid rgba(76,175,125,0.3);}
+.mb-local{color:var(--yellow);background:rgba(240,192,64,0.1);border:1px solid rgba(240,192,64,0.3);}
+.mb-online{color:#74b3ff;background:rgba(116,179,255,0.1);border:1px solid rgba(116,179,255,0.3);}
+.mode-title{font-size:1.1rem;font-weight:700;margin-bottom:8px;}
+.mode-desc{color:var(--muted);font-size:.88rem;line-height:1.65;}
+.mode-steps{margin-top:14px;text-align:left;display:flex;flex-direction:column;gap:6px;}
+.mode-step{font-size:.82rem;color:var(--muted);display:flex;align-items:flex-start;gap:8px;}
+.mstep-n{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--primary);background:rgba(61,142,240,0.1);border:1px solid rgba(61,142,240,0.2);border-radius:4px;padding:1px 6px;flex-shrink:0;margin-top:2px;}
+
+/* AI ENGINE */
+#ai{background:linear-gradient(180deg,#080d10 0%,#0b121c 100%);}
+.ai-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:52px;align-items:start;margin-top:44px;}
+.ai-explain p{color:var(--muted);font-size:.95rem;line-height:1.85;margin-bottom:14px;}
+.ai-explain strong{color:var(--text);}
+.code-block{
+  background:#070d13;border:1px solid var(--border);border-radius:12px;
+  padding:20px 24px;font-family:'JetBrains Mono',monospace;
+  font-size:.78rem;line-height:1.8;color:#a8c4e8;
+  overflow-x:auto;margin-top:20px;
+}
+.code-block .c-kw{color:#c792ea;}
+.code-block .c-fn{color:#82aaff;}
+.code-block .c-num{color:#f78c6c;}
+.code-block .c-cmt{color:#546e7a;font-style:italic;}
+.code-block .c-str{color:#c3e88d;}
+.diff-table{width:100%;border-collapse:collapse;margin-top:0;}
+.diff-table th,.diff-table td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--faint);font-size:.88rem;}
+.diff-table th{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);background:var(--surface2);}
+.diff-table td{color:var(--muted);}
+.diff-table td:first-child{color:var(--text);font-weight:700;}
+.pill-easy{color:var(--green);background:rgba(76,175,125,0.12);border:1px solid rgba(76,175,125,0.3);border-radius:9999px;padding:2px 10px;font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace;}
+.pill-med{color:var(--yellow);background:rgba(240,192,64,0.1);border:1px solid rgba(240,192,64,0.3);border-radius:9999px;padding:2px 10px;font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace;}
+.pill-hard{color:#f08080;background:rgba(240,100,60,0.1);border:1px solid rgba(240,100,60,0.3);border-radius:9999px;padding:2px 10px;font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace;}
+.ai-cards{display:flex;flex-direction:column;gap:14px;}
+.ai-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;}
+.ai-card h4{font-size:.92rem;font-weight:700;margin-bottom:6px;}
+.ai-card p{color:var(--muted);font-size:.84rem;line-height:1.65;}
+.weight-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:2px;margin-top:16px;border-radius:8px;overflow:hidden;}
+.wc{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;}
+
+/* ONLINE PLAY */
+#online{background:var(--bg);}
+.online-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:44px;}
+.flow-steps{display:flex;flex-direction:column;gap:0;}
+.flow-step{display:flex;gap:16px;position:relative;padding-bottom:28px;}
+.flow-step:last-child{padding-bottom:0;}
+.flow-step::before{content:'';position:absolute;left:17px;top:34px;bottom:0;width:1px;background:var(--faint);}
+.flow-step:last-child::before{display:none;}
+.flow-num{width:34px;height:34px;border-radius:50%;background:rgba(61,142,240,0.12);border:1px solid rgba(61,142,240,0.3);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--primary);flex-shrink:0;}
+.flow-content h4{font-size:.92rem;font-weight:700;margin-bottom:4px;}
+.flow-content p{color:var(--muted);font-size:.85rem;line-height:1.6;}
+
+/* TECH */
+#tech{background:linear-gradient(180deg,#0b121c 0%,#080d10 100%);}
+.tech-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:44px;}
+.tc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;display:flex;align-items:center;gap:14px;transition:all .2s;}
+.tc:hover{border-color:var(--primary);transform:translateY(-2px);}
+.tc-icon{font-size:26px;flex-shrink:0;}
+.tc-name{font-weight:700;font-size:.92rem;margin-bottom:2px;}
+.tc-type{font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;}
+.tech-badge-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px;}
+.tbadge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:9999px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:1.5px;}
+.tb-js{background:rgba(247,220,30,0.1);border:1px solid rgba(247,220,30,0.3);color:#f7dc1e;}
+.tb-html{background:rgba(227,77,38,0.1);border:1px solid rgba(227,77,38,0.3);color:#e34d26;}
+.tb-css{background:rgba(38,77,228,0.1);border:1px solid rgba(38,77,228,0.3);color:#264de4;}
+.tb-peer{background:rgba(61,142,240,0.1);border:1px solid rgba(61,142,240,0.3);color:var(--primary);}
+.tb-green{background:rgba(76,175,125,0.1);border:1px solid rgba(76,175,125,0.3);color:var(--green);}
+
+/* I18N */
+#i18n{background:var(--bg);}
+.lang-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:44px;}
+.lang-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:28px;text-align:center;transition:all .2s;}
+.lang-card:hover{border-color:var(--primary);transform:translateY(-3px);}
+.lang-flag{font-size:3rem;margin-bottom:12px;}
+.lang-name{font-size:1.1rem;font-weight:700;margin-bottom:4px;}
+.lang-native{font-size:.88rem;color:var(--muted);margin-bottom:12px;}
+.lang-font{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--primary);background:rgba(61,142,240,0.08);border:1px solid rgba(61,142,240,0.2);border-radius:9999px;padding:2px 10px;display:inline-block;}
+
+/* TEAM */
+#team{background:linear-gradient(180deg,#080d10 0%,#0b121c 100%);}
+.team-grid{display:flex;flex-wrap:wrap;gap:20px;justify-content:center;margin-top:44px;}
+.team-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:30px 22px;text-align:center;min-width:190px;max-width:230px;flex:1;transition:all .2s;}
+.team-card:hover{border-color:var(--primary);box-shadow:0 4px 24px rgba(61,142,240,0.12);transform:translateY(-4px);}
+.team-av{width:64px;height:64px;border-radius:50%;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;border:2px solid var(--border);background:var(--surface2);position:relative;}
+.team-av::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:1px solid;opacity:.4;animation:avPulse 3s ease-in-out infinite;}
+@keyframes avPulse{0%,100%{transform:scale(1);opacity:.25}50%{transform:scale(1.08);opacity:.55}}
+.tc1 .team-av{border-color:rgba(61,142,240,.5);}.tc1 .team-av::after{border-color:var(--primary);}
+.tc2 .team-av{border-color:rgba(155,141,232,.5);}.tc2 .team-av::after{border-color:var(--purple);}
+.tc3 .team-av{border-color:rgba(76,175,125,.5);}.tc3 .team-av::after{border-color:var(--green);}
+.tc4 .team-av{border-color:rgba(240,192,64,.5);}.tc4 .team-av::after{border-color:var(--yellow);}
+.t-jp{font-family:'Noto Sans JP',sans-serif;font-size:.97rem;font-weight:700;margin-bottom:3px;}
+.t-en{font-size:11px;color:var(--muted);letter-spacing:.06em;}
+.t-role{margin-top:10px;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;font-family:'JetBrains Mono',monospace;padding:3px 10px;border-radius:9999px;display:inline-block;color:var(--primary);background:rgba(61,142,240,.1);border:1px solid rgba(61,142,240,.25);}
+
+/* TOOLS */
+#tools{background:var(--bg);}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:44px;}
+.tool-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;transition:all .2s;}
+.tool-card:hover{border-color:var(--primary);transform:translateY(-2px);}
+.tool-header{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.tool-icon{font-size:24px;}
+.tool-name{font-weight:700;font-size:.95rem;}
+.tool-version{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);background:var(--surface2);border:1px solid var(--faint);border-radius:6px;padding:2px 8px;margin-left:auto;}
+.tool-desc{color:var(--muted);font-size:.87rem;line-height:1.65;}
+.tool-role{margin-top:10px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;font-family:'JetBrains Mono',monospace;color:var(--green);}
+
+/* FOOTER */
+footer{position:relative;z-index:1;background:var(--surface);border-top:1px solid var(--border);padding:48px 32px;text-align:center;}
+.foot-logo{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:14px;}
+.foot-logo img{width:38px;height:38px;filter:drop-shadow(0 0 8px rgba(61,142,240,0.4));}
+.foot-logo span{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;letter-spacing:5px;color:var(--primary);text-transform:uppercase;}
+.foot-jp{font-family:'Noto Sans JP',sans-serif;font-size:12px;color:var(--faint);letter-spacing:3px;margin-bottom:20px;}
+.foot-copy{font-size:12px;color:var(--muted);}
+.foot-devs{color:var(--faint);font-size:11px;margin-top:4px;}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  nav{padding:12px 18px;}.nav-right .nav-pill.outline{display:none;}
+  .ov-grid,.ai-grid,.online-grid,.rules-cols{grid-template-columns:1fr;}
+  .modes-grid,.lang-cards{grid-template-columns:1fr;}
+  .sec{padding:72px 20px;}
+}
+
+/* ── LANG SWITCHER ── */
+.lang-switch{display:flex;align-items:center;gap:4px;background:rgba(61,142,240,0.08);border:1px solid rgba(61,142,240,0.2);border-radius:9999px;padding:3px;}
+.lang-btn{padding:5px 14px;border-radius:9999px;font-size:11px;font-weight:700;letter-spacing:0.06em;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:all .2s;font-family:'JetBrains Mono',monospace;}
+.lang-btn.active{background:linear-gradient(135deg,var(--primary),var(--purple));color:#fff;box-shadow:0 2px 10px rgba(61,142,240,0.3);}
+.lang-btn:hover:not(.active){color:var(--text);}
+[data-i18n]{transition:opacity .15s ease;}
+.lang-fade{opacity:0!important;}
+body.lang-ja{font-family:'Noto Sans JP','Space Grotesk',sans-serif;}
+</style>
+</head>
+<body class="lang-ja">
+<canvas id="bgc"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-left">
+    <img src="mirai_coders_badge_transparent.svg" alt="Logo"/>
+    <span class="nav-title">Othello</span>
+  </div>
+  <div class="nav-right">
+    <div class="lang-switch" id="langSwitch"><button class="lang-btn active" id="btnJa" onclick="setLang('ja')">日本語</button><button class="lang-btn" id="btnEn" onclick="setLang('en')">EN</button></div>
+    <a href="othello_showcase.html" class="nav-pill outline" data-i18n="nav_showcase">← ショーケース</a>
+    <a href="index.html" class="nav-pill solid" data-i18n="nav_play">▶ プレイ</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-crumb">
+    <a href="othello_showcase.html" data-i18n="hero_home">ホーム</a>&nbsp;/&nbsp;<span data-i18n="hero_crumb">詳細情報</span>
+  </div>
+  <div class="hero-logo-wrap">
+    <div class="h-orbit"><span class="h-odot"></span></div>
+    <div class="h-orbit"><span class="h-odot"></span></div>
+    <img class="hero-logo-img" src="mirai_coders_badge_transparent.svg" alt="Mirai Coders"/>
+  </div>
+  <h1 class="hero-hl" data-i18n="hero_title">詳細情報</h1>
+  <p class="hero-sub" data-i18n="hero_sub">オセロ ウェブゲーム — 技術詳細</p>
+  <p class="hero-jp" data-i18n="hero_jp">OTHELLO WEB GAME — TECHNICAL DETAILS</p>
+  <div class="hero-btns">
+    <a href="#howtoplay" class="btn-p" data-i18n="hero_btn1">遊び方</a>
+    <a href="#ai" class="btn-o" data-i18n="hero_btn2">AIエンジン ↓</a>
+    <a href="#tools" class="btn-o" data-i18n="hero_btn3">使用ツール ↓</a>
+  </div>
+</section>
+
+<div class="glow-div"></div>
+
+<!-- OVERVIEW -->
+<section id="overview">
+  <div class="sec">
+    <div class="sec-label"><span data-i18n="ov_label">// ゲーム概要</span></div>
+    <h2 class="sec-title" data-i18n="ov_title">オセロとは？</h2>
+    <p class="sec-desc" data-i18n="ov_desc">AI・オンライン対戦・多言語対応を備えた本格的ウェブアプリとして生まれ変わった、8×8グリッドの古典的2人用ストラテジーボードゲームです。<!-- on an 8×8 grid, reimagined as a full-featured web application --></p>
+    <div class="ov-grid">
+      <div id="board-wrap"></div>
+      <div class="ov-text">
+        <p>オセロ（<strong>リバーシ</strong>とも呼ばれる）は、8×8のグリッド上でプレイする2人用のストラテジーボードゲームです。各コマは黒面と白面を持つディスクで、プレイヤーはディスクを置いて相手のコマをひっくり返します。</p>
+        <p>手を打てるのは、縦・横・斜めのいずれかの方向で相手のディスクを1枚以上<strong>挟む</strong>ことができる場所だけです。挟まれたディスクはすべて自分の色に<strong>反転</strong>されます。</p>
+        <p>どちらのプレイヤーも手を打てなくなった時点でゲーム終了です。ボード上のディスクが多いプレイヤーが勝者となります。四隅は最も重要なマスで、一度取られると絶対にひっくり返せません。</p>
+        <div class="stats-row">
+          <div><div class="stat-n">8×8</div><div class="stat-l">盤面サイズ</div></div>
+          <div><div class="stat-n">64</div><div class="stat-l">総マス数</div></div>
+          <div><div class="stat-n">3</div><div class="stat-l">ゲームモード</div></div>
+          <div><div class="stat-n">3</div><div class="stat-l">AI難易度</div></div>
+          <div><div class="stat-n">3</div><div class="stat-l">対応言語</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="glow-div"></div>
+
+<!-- RULES -->
+<section id="rules">
+  <div class="sec">
+    <div class="sec-label"><span data-i18n="rules_label">// ゲームルール</span></div>
+    <h2 class="sec-title" data-i18n="rules_title">ルールの説明</h2>
+    <div class="rules-cols">
+      <div class="rule-card">
+        <h3>⚫ 基本ルール</h3>
+        <ol>
+          <li>ゲーム開始時、盤面中央に<strong>黒2枚・白2枚</strong>が配置されます。</li>
+          <li>常に黒が先手です。</li>
+          <li>有効な手は、任意の方向で相手のディスクを<strong>1枚以上挟む</strong>必要があります。</li>
+          <li>挟まれたディスクはすべて自分の色に<strong>反転</strong>されます。</li>
+          <li>有効な手がない場合、そのターンは<strong>スキップ</strong>されます。</li>
+          <li>どちらも手を打てなくなるか、盤面が埋まったらゲーム終了です。</li>
+          <li>ディスクが<strong>多いプレイヤー</strong>が勝利します。</li>
+        </ol>
+      </div>
+      <div class="rule-card">
+        <h3>♟ 戦略のコツ</h3>
+        <ul>
+          <li><strong>四隅</strong>（価値：100）は最強のマスで、一度取ると絶対にひっくり返されません。</li>
+          <li><strong>辺</strong>は反転方向が限られるため有利な位置です。</li>
+          <li><strong>Xマス（四隅の斜め隣）を避ける</strong> — そこに置くと相手に四隅を取られてしまいます。</li>
+          <li><strong>手数</strong>が重要：有効な手が多いほど相手の選択肢を制限できます。</li>
+          <li><strong>パリティ</strong>：あるエリアの最後の手を打てることが有利になります。</li>
+          <li>序盤は<strong>ディスク数を少なく</strong>保つことを目指しましょう — 相手の手を減らせます。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="glow-div"></div>
+
+<!-- HOW TO PLAY -->
+<section id="howtoplay">
+  <div class="sec">
+    <div class="sec-label"><span data-i18n="htp_label">// 遊び方</span></div>
+    <h2 class="sec-title" data-i18n="htp_title">はじめ方</h2>
+    <p class="sec-desc" data-i18n="htp_desc">ゲームを起動して、以下の手順でどのモードでもプレイを開始できます。</p>
+    <div class="steps-grid">
+      <div class="step-card"><div class="step-num">01</div><div class="step-title">言語を選ぶ</div><div class="step-desc">起動時はデフォルトで日本語が選択されています。右上の言語スイッチャーを使って英語またはシンハラ語（සිංහල）に切り替えられます。</div></div>
+      <div class="step-card"><div class="step-num">02</div><div class="step-title">ゲームモードを選ぶ</div><div class="step-desc">メインメニューから選択：<strong>VS AI</strong>でコンピュータ対戦、<strong>ローカル2P</strong>で同じデバイスで対戦、<strong>オンライン</strong>で友達とリモート対戦。</div></div>
+      <div class="step-card"><div class="step-num">03</div><div class="step-title">設定を変更する</div><div class="step-desc">VS AIモードでは難易度（かんたん・ふつう・むずかしい）を選び、黒（先手）か白（後手）かを選択します。</div></div>
+      <div class="step-card"><div class="step-num">04</div><div class="step-title">ニューゲームをクリック</div><div class="step-desc"><strong>ニューゲーム</strong>ボタンを押してスタート。盤面中央に4枚のディスクが配置されます。緑の点（ヒント）が置ける場所を示します。</div></div>
+      <div class="step-card"><div class="step-num">05</div><div class="step-title">手を打つ</div><div class="step-desc">ハイライトされたマスをクリックしてディスクを置きます。挟まれた相手のディスクがなめらかなアニメーションと効果音とともにすべてひっくり返ります。</div></div>
+      <div class="step-card"><div class="step-num">06</div><div class="step-title">ゲーム終了</div><div class="step-desc">打てる手がなくなると、結果モーダルに最終スコアと勝者が表示されます。<strong>もう一度</strong>で再戦、<strong>メニュー</strong>でモード選択に戻れます。</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="glow-div"></div>
+
+<!-- GAME MODES -->
+<section id="modes">
+  <div class="sec">
+    <div class="sec-label"><span data-i18n="modes_label">// ゲームモード</span></div>
+    <h2 class="sec-title" data-i18n="modes_title">3つのプレイ方法</h2>
+    <div class="modes-grid">
+      <div class="mode-card">
+        <div class="mode-icon">🤖</div>
+        <span class="mode-badge-pill mb-ai">VS AI</span>
+        <div class="mode-title">コンピュータ対戦</div>
+        <div class="mode-desc">3段階の難易度でミニマックスAIに挑戦。ゲーム開始前に自分のディスクの色を選べます。</div>
+        <div class="mode-steps">
+          <div class="mode-step"><span class="mstep-n">1</span><span>メニューから<strong>VS AI</strong>を選択</span></div>
+          <div class="mode-step"><span class="mstep-n">2</span><span>難易度を選ぶ：かんたん・ふつう・むずかしい</span></div>
+          <div class="mode-step"><span class="mstep-n">3</span><span>黒（先手）か白（後手）を選択</span></div>
+          <div class="mode-step"><span class="mstep-n">4</span><span><strong>ニューゲーム</strong>をクリック — スタート！</span></div>
+        </div>
+      </div>
+      <div class="mode-card">
+        <div class="mode-icon">🤝</div>
+        <span class="mode-badge-pill mb-local">LOCAL 2P</span>
+        <div class="mode-title">ローカル2人プレイ</div>
+        <div class="mode-desc">1台のデバイスで2人対戦。手を打つたびに次のプレイヤーへデバイスを渡す画面が表示されます。</div>
+        <div class="mode-steps">
+          <div class="mode-step"><span class="mstep-n">1</span><span>メニューから<strong>ローカル2人プレイ</strong>を選択</span></div>
+          <div class="mode-step"><span class="mstep-n">2</span><span>スコアパネルでプレイヤー名を編集</span></div>
+          <div class="mode-step"><span class="mstep-n">3</span><span>指示に従ってデバイスを渡す</span></div>
+          <div class="mode-step"><span class="mstep-n">4</span><span><strong>準備完了</strong>をタップして自分のターンを続ける</span></div>
+        </div>
+      </div>
+      <div class="mode-card">
+        <div class="mode-icon">🌐</div>
+        <span class="mode-badge-pill mb-online">ONLINE</span>
+        <div class="mode-title">オンライン対戦</div>
+        <div class="mode-desc">Firebaseを使ったリアルタイム通信で世界中の友達と対戦。アカウント不要です。</div>
+        <div class="mode-steps">
+          <div class="mode-step"><span class="mstep-n">1</span><span><strong>オンライン2人プレイ</strong>を選択</span></div>
+          <div class="mode-step"><span class="mstep-n">2</span><span>名前を入力し<strong>ルーム作成</strong>をクリック</span></div>
+          <div class="mode-step"><span class="mstep-n">3</span><span>5文字のルームコードを友達と共有</span></div>
+          <div class="mode-step"><span class="mstep-n">4</span><span>友達が参加 → ゲーム自動開始</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="glow-div"></div>
+
+<!-- AI ENGINE -->
+<section id="ai">
+  <div class="sec">
+    <div class="sec-label"><span data-i18n="ai_label">// AIエンジン</span></div>
+    <h2 class="sec-title" data-i18n="ai_title">AIの仕組み</h2>
+    <div class="ai-grid">
+      <div class="ai-explain">
+        <p>AIは古典的な<strong>ミニマックスアルゴリズム（アルファベータ枝刈り付き）</strong>を使用しています。これはゲームツリーを探索し、考えられるすべての将来の局面を評価して、自分の優位性を最大化しつつ相手の優位性を最小化する手を選ぶ手法です。</p>
+        <p><strong>アルファベータ枝刈り</strong>は結果に影響しないゲームツリーの枝を除外し、計算量を大幅に削減することでより深い探索（むずかしい難易度では深さ5まで）を可能にします。</p>
+        <p>各盤面は<strong>重み付きポジションテーブル</strong>と<strong>手数ボーナス</strong>を組み合わせて評価されます。相手より多くの有効手を持つほど有利になります。テーブルでは四隅（100）に高い価値、Xマス（−50）に負の値、内側のマスには中立の値が割り当てられています。</p>
+
+        <div class="code-block">
+<span class="c-cmt">// Weighted board evaluation table</span>
+<span class="c-kw">const</span> <span class="c-fn">WEIGHTS</span> = [
+  [<span class="c-num">100</span>,<span class="c-num">-20</span>, <span class="c-num">10</span>,  <span class="c-num">5</span>,  <span class="c-num">5</span>, <span class="c-num">10</span>,<span class="c-num">-20</span>,<span class="c-num">100</span>],
+  [<span class="c-num">-20</span>,<span class="c-num">-50</span>, <span class="c-num">-2</span>, <span class="c-num">-2</span>, <span class="c-num">-2</span>, <span class="c-num">-2</span>,<span class="c-num">-50</span>,<span class="c-num">-20</span>],
+  [ <span class="c-num">10</span>, <span class="c-num">-2</span>,  <span class="c-num">5</span>,  <span class="c-num">1</span>,  <span class="c-num">1</span>,  <span class="c-num">5</span>, <span class="c-num">-2</span>, <span class="c-num">10</span>],
+  [  <span class="c-num">5</span>, <span class="c-num">-2</span>,  <span class="c-num">1</span>,  <span class="c-num">0</span>,  <span class="c-num">0</span>,  <span class="c-num">1</span>, <span class="c-num">-2</span>,  <span class="c-num">5</span>],
+  ...
+];
+<span class="c-cmt">// Score = position weights + 5 × mobility advantage</span>
+<span class="c-kw">function</span> <span class="c-fn">evalBoard</span>(b, player) {
+  <span class="c-kw">let</span> s = <span class="c-num">0</span>;
+  <span class="c-cmt">// sum weighted squares + mobility bonus</span>
+  s += <span class="c-num">5</span> * (getValidMoves(b, player).<span class="c-fn">length</span>
+        - getValidMoves(b, opp).<span class="c-fn">length</span>);
+  <span class="c-kw">return</span> s;
+}
+        </div>
+
+        <div style="margin-top:28px;">
+          <table class="diff-table">
+            <thead><tr><th>難易度</th><th>探索深さ</th><th>戦略</th><th>速度</th></tr></thead>
+            <tbody>
+              <tr><td><span class="pill-easy">かんたん</span></td><td>1</td><td>上位3手からランダム選択</td><td>即時</td></tr>
+              <tr><td><span class="pill-med">ふつう</span></td><td>3</td><td>ミニマックス + α-β枝刈り</td><td>速い</td></tr>
+              <tr><td><span class="pill-hard">むずかしい</span></td><td>5</td><td>ミニマックス + α-β枝刈り</td><td>約0.2秒</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="ai-cards">
+        <div class="ai-card">
+          <h4>🎯 ポジション重みマップ</h4>
+          <p>8×8の重み付き盤面の可視化。緑 = 高価値、赤 = 避けるべきマス。</p>
+          <div class="weight-grid" id="weight-grid"></div>
+        </div>
+        <div class="ai-card">
+          <h4>🌲 ミニマックス探索木</h4>
+          <p>AIは最大5手先まで読み、考えられるすべての局面のツリーを構築します。アルファベータ枝刈りにより結果に影響しない枝を切り捨て、高速に動作します。</p>
+        </div>
+        <div class="ai-card">
+          <h4>📐 8方向チェック</h4>
+          <p>反転の検出は ↑ ↗ → ↘ ↓ ↙ ← ↖ の8方向を同時にチェックし、有効な手と反転の連鎖を計算します。</p>
+        </div>
+        <div class="ai-card">
+          <h4>🔊 サウンドフィードバック</h4>
+          <p>Web Audio APIが固有の音を生成：黒ディスク配置に<strong>440 Hz</strong>（正弦波）、白に<strong>380 Hz</strong>、AIの手に<strong>330 Hz</strong>。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="glow-div"></div>
+
+<!-- ONLINE PLAY -->
+<section id="online">
+  <div class="sec">
+    <div class="sec-label"><span data-i18n="online_label">// オンラインアーキテクチャ</span></div>
+    <h2 class="sec-title" data-i18n="online_title">オンライン対戦の仕組み</h2>
+    <p class="sec-desc">リアルタイムマルチプレイヤーは<strong>Firebase Realtime Database</strong>によるシグナリングとルーム管理で実現しており、専用ゲームサーバーは不要です。</p>
+    <div class="online-grid">
+      <div>
+        <h3 style="margin-bottom:24px;font-size:1rem;color:var(--muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;">ホストの流れ</h3>
+        <div class="flow-steps">
+          <div class="flow-step"><div class="flow-num">1</div><div class="flow-content"><h4>ルームコード生成</h4><p>一意の5文字英数字コード（例：<code style="color:var(--primary)">X7K2P</code>）が生成され、Firebase の <code>/rooms/[code]</code> に書き込まれます。</p></div></div>
+          <div class="flow-step"><div class="flow-num">2</div><div class="flow-content"><h4>ゲストを待つ</h4><p>Firebase SSE（Server-Sent Events）がルームノードを監視します。ゲストが参加すると <code>guest</code> フィールドがリアルタイムに更新されます。</p></div></div>
+          <div class="flow-step"><div class="flow-num">3</div><div class="flow-content"><h4>ゲーム開始</h4><p>両プレイヤーが接続されると、ホストが <code>status: "ready"</code> をパッチし、両サイドがSSEトリガーで同時にゲームを開始します。</p></div></div>
+          <div class="flow-step"><div class="flow-num">4</div><div class="flow-content"><h4>手の同期</h4><p>各手はタイムスタンプとプレイヤーロールとともに <code>/rooms/[code]/moves</code> にプッシュされ、相手がSSE経由で受信して適用します。</p></div></div>
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:24px;font-size:1rem;color:var(--muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;">ゲストの流れ</h3>
+        <div class="flow-steps">
+          <div class="flow-step"><div class="flow-num">1</div><div class="flow-content"><h4>ルームコード入力</h4><p>ホストから共有された5文字コードを入力します。アプリが <code>/rooms/[code]</code> を取得してルームの存在と空き状況を確認します。</p></div></div>
+          <div class="flow-step"><div class="flow-num">2</div><div class="flow-content"><h4>ゲストとして登録</h4><p>ゲストが自分の名前をルームノードにパッチします。これにより即座にホストのSSEリスナーがトリガーされ、到着が通知されます。</p></div></div>
+          <div class="flow-step"><div class="flow-num">3</div><div class="flow-content"><h4>ゲーム開始</h4><p>ゲストはSSEで <code>status: "ready"</code> を監視します。検出されるとゲーム画面が表示され、両プレイヤーがライブ状態になります。</p></div></div>
+          <div class="flow-step"><div class="flow-num">4</div><div class="flow-content"><h4>重複排除</h4><p>すべての手のメッセージにはタイムスタンプが含まれます。クライアントは最後に処理したタイムスタンプを追跡し、再接続時の二重適用を防ぎます。</p></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="glow-div"></div>
+
+<!-- TECH STACK -->
+<section id="tech">
+  <div class="sec">
+    <div class="sec-label"><span data-i18n="tech_label">// 技術スタック</span></div>
+    <h2 class="sec-title" data-i18n="tech_title">Webプラットフォームで構築</h2>
+    <p class="sec-desc" data-i18n="tech_desc">フレームワーク不使用。ビルドツール不使用。純粋な手書きのウェブ技術 — モダンブラウザでネイティブ品質の体験を提供。</p>
+    <div class="tech-grid">
+      <div class="tc"><div class="tc-icon">🟨</div><div><div class="tc-name">JavaScript ES2020+</div><div class="tc-type">コア言語</div></div></div>
+      <div class="tc"><div class="tc-icon">🟧</div><div><div class="tc-name">HTML5</div><div class="tc-type">構造・マークアップ</div></div></div>
+      <div class="tc"><div class="tc-icon">🟦</div><div><div class="tc-name">CSS3 + Custom Properties</div><div class="tc-type">スタイリング・アニメーション</div></div></div>
+      <div class="tc"><div class="tc-icon">🔗</div><div><div class="tc-name">Firebase Realtime DB</div><div class="tc-type">オンラインシグナリング</div></div></div>
+      <div class="tc"><div class="tc-icon">🎨</div><div><div class="tc-name">Google Fonts</div><div class="tc-type">タイポグラフィ</div></div></div>
+      <div class="tc"><div class="tc-icon">🔊</div><div><div class="tc-name">Web Audio API</div><div class="tc-type">サウンドエフェクト</div></div></div>
+      <div class="tc"><div class="tc-icon">⚡</div><div><div class="tc-name">Canvas API</div><div class="tc-type">パーティクルエフェクト</div></div></div>
+      <div class="tc"><div class="tc-icon">🧠</div><div><div class="tc-name">Minimax + Alpha-Beta</div><div class="tc-type">AIアルゴリズム</div></div></div>
+      <div class="tc"><div class="tc-icon">🌊</div><div><div class="tc-name">SSE (EventSource)</div><div class="tc-type">リアルタイム更新</div></div></div>
+    </div>
+    <div class="tech-badge-row">
+      <span class="tbadge tb-js">JavaScript</span>
+      <span class="tbadge tb-html">HTML5</span>
+      <span class="tbadge tb-css">CSS3</span>
+      <span class="tbadge tb-peer">Firebase</span>
+      <span class="tbadge tb-green">Web Audio API</span>
+      <span class="tbadge tb-green">Canvas API</span>
+      <span class="tbadge tb-peer">EventSource / SSE</span>
+      <span class="tbadge tb-js">i18n (3 Languages)</span>
+      <span class="tbadge tb-css">CSS Animations</span>
+    </div>
+  </div>
+</section>
+
+<div class="glow-div"></div>
+
+<!-- TOOLS USED -->
+<section id="tools">
+  <div class="sec">
+    <div class="sec-label"><span data-i18n="tools_label">// 使用ツール・サービス</span></div>
+    <h2 class="sec-title" data-i18n="tools_title">開発ツール</h2>
+    <p class="sec-desc" data-i18n="tools_desc">このプロジェクトの構築・スタイリング・デプロイに使用したすべてのツール・サービス・リソース。</p>
+    <div class="tools-grid">
+      <div class="tool-card">
+        <div class="tool-header"><div class="tool-icon">📝</div><div class="tool-name">VS Code</div><span class="tool-version">エディタ</span></div>
+        <div class="tool-desc">プロジェクトのすべてのHTML・CSS・JavaScriptファイルの作成・管理に使用したメインコードエディタ。</div>
+        <div class="tool-role">コードエディタ</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-header"><div class="tool-icon">🟨</div><div class="tool-name">Vanilla JavaScript</div><span class="tool-version">ES2020+</span></div>
+        <div class="tool-desc">盤面状態・手の検証・AIミニマックス・反転検出・オンライン同期など、すべてのゲームロジックをフレームワーク不使用の純粋なJavaScriptで実装。</div>
+        <div class="tool-role">ゲームロジック + AI</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-header"><div class="tool-icon">🔥</div><div class="tool-name">Firebase Realtime Database</div><span class="tool-version">REST + SSE</span></div>
+        <div class="tool-desc">オンラインマルチプレイヤーのシグナリングバックエンドとして使用。ルーム作成・プレイヤー参加・手の同期はすべてFirebase REST APIとServer-Sent Events（EventSource）で実現。</div>
+        <div class="tool-role">オンラインバックエンド</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-header"><div class="tool-icon">🎨</div><div class="tool-name">Google Fonts</div><span class="tool-version">CDN</span></div>
+        <div class="tool-desc">4つのフォントファミリーを読み込み：<strong>Cabinet Grotesk</strong>（ディスプレイ）、<strong>Satoshi</strong>（本文）、<strong>Noto Sans JP</strong>（日本語）、<strong>Noto Sans Sinhala</strong>（シンハラ語）。</div>
+        <div class="tool-role">タイポグラフィ</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-header"><div class="tool-icon">🎵</div><div class="tool-name">Web Audio API</div><span class="tool-version">ブラウザネイティブ</span></div>
+        <div class="tool-desc">OscillatorNodeとGainNodeを使ってサウンドエフェクトをプロシージャルに生成。音声ファイル不要。黒（440 Hz）・白（380 Hz）・AI（330 Hz）の各手で異なる周波数を使用。</div>
+        <div class="tool-role">サウンドエフェクト</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-header"><div class="tool-icon">🖼️</div><div class="tool-name">Canvas API</div><span class="tool-version">ブラウザネイティブ</span></div>
+        <div class="tool-desc">スプラッシュ画面とショーケースページの背景に表示されるアニメーションパーティクルフィールドを実装。<code>requestAnimationFrame</code>を使ったフレームごとのアニメーションループで70個のパーティクルを描画。</div>
+        <div class="tool-role">ビジュアルエフェクト</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-header"><div class="tool-icon">🌐</div><div class="tool-name">GitHub Pages / 静的ホスティング</div><span class="tool-version">デプロイ</span></div>
+        <div class="tool-desc">完全な静的プロジェクト（HTML + CSS + JS）のため、GitHub Pages・Netlify・Vercel・シンプルなファイルサーバーなど、あらゆる静的ホスティングプラットフォームにデプロイ可能。</div>
+        <div class="tool-role">デプロイ</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-header"><div class="tool-icon">🖌️</div><div class="tool-name">CSS カスタムプロパティ</div><span class="tool-version">デザインシステム</span></div>
+        <div class="tool-desc">CSS変数を使ったデザイントークンシステムで、カラーパレット・スペーシング・ボーダー半径・タイポグラフィスケール・トランジションを一元管理。テーマの変更が容易です。</div>
+        <div class="tool-role">デザインシステム</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-header"><div class="tool-icon">📡</div><div class="tool-name">EventSource (SSE)</div><span class="tool-version">ブラウザネイティブ</span></div>
+        <div class="tool-desc">FirebaseはSSEでリアルタイムの変更をストリーミング。<code>put</code>（フルスナップショット）と<code>patch</code>（部分更新）の両イベントを処理し、ポーリングなしで両プレイヤーを同期。</div>
+        <div class="tool-role">リアルタイム同期</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="glow-div"></div>
+
+<!-- I18N -->
+<section id="i18n">
+  <div class="sec">
+    <div class="sec-label"><span data-i18n="i18n_label">// 国際化対応</span></div>
+    <h2 class="sec-title" data-i18n="i18n_title">3言語サポート</h2>
+    <p class="sec-desc" data-i18n="i18n_desc">インターフェース全体が3言語に対応し、動的な切り替えとスクリプトごとのフォント最適化を実現しています。</p>
+    <div class="lang-cards">
+      <div class="lang-card">
+        <div class="lang-flag">🇯🇵</div>
+        <div class="lang-name">日本語</div>
+        <div class="lang-native"><span data-i18n="lang1_native">Japanese — デフォルト言語</span></div>
+        <span class="lang-font">Noto Sans JP</span>
+      </div>
+      <div class="lang-card">
+        <div class="lang-flag">🇬🇧</div>
+        <div class="lang-name">English</div>
+        <div class="lang-native">English — International</div>
+        <span class="lang-font">Cabinet Grotesk / Satoshi</span>
+      </div>
+      <div class="lang-card">
+        <div class="lang-flag">🇱🇰</div>
+        <div class="lang-name">සිංහල</div>
+        <div class="lang-native">Sinhala — Sri Lanka</div>
+        <span class="lang-font">Noto Sans Sinhala</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="glow-div"></div>
+
+<!-- TEAM -->
+<section id="team">
+  <div class="sec">
+    <div class="sec-label"><span data-i18n="team_label">// 開発チーム</span></div>
+    <h2 class="sec-title" data-i18n="team_title">開発者紹介</h2>
+    <p class="sec-desc" data-i18n="team_desc">創造性・技術力・情熱を持つ4人の開発者チームがこのゲームを制作しました。</p>
+    <div class="team-grid">
+      <div class="team-card tc1">
+        <div class="team-av">サ</div>
+        <div class="t-jp">サリヤ プラサド</div>
+        <div class="t-en">Sariya Prasad</div>
+        <span class="t-role">開発者</span>
+      </div>
+      <div class="team-card tc2">
+        <div class="team-av">真</div>
+        <div class="t-jp">真家 拓也</div>
+        <div class="t-en">Maia Takuya</div>
+        <span class="t-role">開発者</span>
+      </div>
+      <div class="team-card tc3">
+        <div class="team-av">菅</div>
+        <div class="t-jp">菅野 爽汰</div>
+        <div class="t-en">Sugano Sota</div>
+        <span class="t-role">開発者</span>
+      </div>
+      <div class="team-card tc4">
+        <div class="team-av">エ</div>
+        <div class="t-jp">エランガ マドゥサンガ</div>
+        <div class="t-en">Eranga Madusanga</div>
+        <span class="t-role">開発者</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-logo">
+    <img src="mirai_coders_badge_transparent.svg" alt="Mirai Coders"/>
+    <span>Othello</span>
+  </div>
+  <div class="foot-jp">MIRAI CODERS — オセロ ゲーム — 技術資料</div>
+  <div class="foot-copy">
+    ❤️ を込めて HTML5 · CSS3 · Vanilla JavaScript · Firebase Realtime DB で制作
+  </div>
+  <div class="foot-devs">
+    サリヤ プラサド &nbsp;|&nbsp; 真家 拓也 &nbsp;|&nbsp; 菅野 爽汰 &nbsp;|&nbsp; エランガ マドゥサンガ
+  </div>
+</footer>
+
+<script>
+// ── PARTICLES ──
+const canvas = document.getElementById('bgc');
+const ctx = canvas.getContext('2d');
+let W, H, parts = [];
+function resize(){ W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
+resize(); addEventListener('resize', resize);
+for(let i=0;i<100;i++) parts.push({x:Math.random()*1e4,y:Math.random()*1e4,r:Math.random()*1.4+.3,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,c:Math.random()<.5?'#3d8ef0':'#9b8de8',a:Math.random()});
+(function draw(){
+  ctx.clearRect(0,0,W,H);
+  for(const p of parts){
+    p.x+=p.vx; p.y+=p.vy; p.a+=.005;
+    if(p.x<0||p.x>W)p.vx*=-1; if(p.y<0||p.y>H)p.vy*=-1;
+    ctx.beginPath(); ctx.arc(p.x%W,p.y%H,p.r,0,Math.PI*2);
+    ctx.fillStyle=p.c; ctx.globalAlpha=.3+.25*Math.sin(p.a); ctx.fill();
+  }
+  ctx.globalAlpha=1; requestAnimationFrame(draw);
+})();
+
+// ── BOARD PREVIEW ──
+(function(){
+  const B=1,W2=2,E=0;
+  const b=Array.from({length:8},()=>Array(8).fill(E));
+  b[3][3]=W2;b[3][4]=B;b[4][3]=B;b[4][4]=W2;
+  b[2][3]=B;b[2][4]=B;b[2][5]=W2;b[3][5]=B;
+  b[5][2]=W2;b[5][3]=B;b[4][5]=W2;b[5][4]=B;b[5][5]=B;
+  b[1][3]=W2;b[6][5]=W2;b[6][4]=B;b[0][0]=W2;b[0][7]=B;
+  const wrap=document.getElementById('board-wrap');
+  const g=document.createElement('div'); g.className='ov-board';
+  for(let r=0;r<8;r++) for(let c=0;c<8;c++){
+    const cell=document.createElement('div'); cell.className='bc';
+    if(b[r][c]!==E){const d=document.createElement('div');d.className='bd '+(b[r][c]===B?'bk':'wh');cell.appendChild(d);}
+    g.appendChild(cell);
+  }
+  wrap.appendChild(g);
+})();
+
+// ── WEIGHT GRID ──
+(function(){
+  const W2=[
+    [100,-20,10,5,5,10,-20,100],
+    [-20,-50,-2,-2,-2,-2,-50,-20],
+    [10,-2,5,1,1,5,-2,10],
+    [5,-2,1,0,0,1,-2,5],
+    [5,-2,1,0,0,1,-2,5],
+    [10,-2,5,1,1,5,-2,10],
+    [-20,-50,-2,-2,-2,-2,-50,-20],
+    [100,-20,10,5,5,10,-20,100]
+  ];
+  const g=document.getElementById('weight-grid');
+  for(let r=0;r<8;r++) for(let c=0;c<8;c++){
+    const v=W2[r][c];
+    const el=document.createElement('div'); el.className='wc';
+    const norm=(v+50)/150;
+    const r2=Math.round(norm<.5?(1-norm*2)*180:0);
+    const g2=Math.round(norm>.5?(norm-.5)*2*175:0);
+    el.style.background=`rgb(${r2},${g2},40)`;
+    el.style.color=Math.abs(v)>10?'#fff':'rgba(255,255,255,0.5)';
+    el.textContent=v===0?'':v;
+    g.appendChild(el);
+  }
+})();
+
+// ── AUTO SCROLL ──
+let dir=1, lastT=0, paused=false, resumeT;
+const SPEED=20;
+function scroll(ts){
+  if(!paused){
+    const dt=lastT?(ts-lastT)/1000:0; lastT=ts;
+    const max=document.body.scrollHeight-innerHeight;
+    scrollBy(0,SPEED*dt*dir);
+    const cur=scrollY;
+    if(cur>=max-2)dir=-1;
+    if(cur<=2)dir=1;
+  } else { lastT=ts; }
+  requestAnimationFrame(scroll);
+}
+function pause(){
+  paused=true; clearTimeout(resumeT);
+  resumeT=setTimeout(()=>{ paused=false; },3000);
+}
+['wheel','touchstart','mousedown','keydown'].forEach(e=>addEventListener(e,pause,{passive:true}));
+setTimeout(()=>requestAnimationFrame(scroll),1500);
+
+// ─────────────────────────────────────────────
+// I18N SYSTEM
+// ─────────────────────────────────────────────
+const I18N = {
+  ja: {
+    page_title: 'オセロ — 詳細情報',
+    nav_showcase: '← ショーケース', nav_play: '▶ プレイ',
+    hero_home: 'ホーム', hero_crumb: '詳細情報',
+    hero_title: '詳細情報',
+    hero_sub: 'オセロ ウェブゲーム — 技術詳細',
+    hero_jp: 'OTHELLO WEB GAME — TECHNICAL DETAILS',
+    hero_btn1: '遊び方', hero_btn2: 'AIエンジン ↓', hero_btn3: '使用ツール ↓',
+    ov_label: '// ゲーム概要', ov_title: 'オセロとは？',
+    ov_desc: 'AI・オンライン対戦・多言語対応を備えた本格的ウェブアプリとして生まれ変わった、8×8グリッドの古典的2人用ストラテジーボードゲームです。',
+    rules_label: '// ゲームルール', rules_title: 'ルールの説明',
+    htp_label: '// 遊び方', htp_title: 'はじめ方',
+    htp_desc: 'ゲームを起動して、以下の手順でどのモードでもプレイを開始できます。',
+    modes_label: '// ゲームモード', modes_title: '3つのプレイ方法',
+    ai_label: '// AIエンジン', ai_title: 'AIの仕組み',
+    online_label: '// オンラインアーキテクチャ', online_title: 'オンライン対戦の仕組み',
+    tech_label: '// 技術スタック', tech_title: 'Webプラットフォームで構築',
+    tech_desc: 'フレームワーク不使用。ビルドツール不使用。純粋な手書きのウェブ技術 — モダンブラウザでネイティブ品質の体験を提供。',
+    tools_label: '// 使用ツール・サービス', tools_title: '開発ツール',
+    tools_desc: 'このプロジェクトの構築・スタイリング・デプロイに使用したすべてのツール・サービス・リソース。',
+    i18n_label: '// 国際化対応', i18n_title: '3言語サポート',
+    i18n_desc: 'インターフェース全体が3言語に対応し、動的な切り替えとスクリプトごとのフォント最適化を実現しています。',
+    lang1_native: 'Japanese — デフォルト言語',
+    team_label: '// 開発チーム', team_title: '開発者紹介',
+    team_desc: '創造性・技術力・情熱を持つ4人の開発者チームがこのゲームを制作しました。',
+    team_role: '開発者'
+  },
+  en: {
+    page_title: 'Othello — Learn More',
+    nav_showcase: '← Showcase', nav_play: '▶ Play Now',
+    hero_home: 'Home', hero_crumb: 'Learn More',
+    hero_title: 'LEARN MORE',
+    hero_sub: 'Deep Dive into Othello — Web Game',
+    hero_jp: 'オセロ ウェブゲーム — 技術詳細',
+    hero_btn1: 'How to Play', hero_btn2: 'AI Engine ↓', hero_btn3: 'Tools Used ↓',
+    ov_label: '// Game Overview', ov_title: 'What is Othello?',
+    ov_desc: 'A classic two-player strategy board game on an 8×8 grid, reimagined as a full-featured web application with AI, online multiplayer, and multilingual support.',
+    rules_label: '// Game Rules', rules_title: 'How the Rules Work',
+    htp_label: '// How to Play', htp_title: 'Getting Started',
+    htp_desc: 'Launch the game and follow these steps to start playing in any mode.',
+    modes_label: '// Game Modes', modes_title: 'Three Ways to Play',
+    ai_label: '// AI Engine', ai_title: 'How the AI Works',
+    online_label: '// Online Architecture', online_title: 'How Online Play Works',
+    tech_label: '// Technology Stack', tech_title: 'Built With the Web Platform',
+    tech_desc: 'Zero frameworks. Zero build tools. Pure handcrafted web technologies — delivering a native-quality experience in any modern browser.',
+    tools_label: '// Tools & Services Used', tools_title: 'Development Tools',
+    tools_desc: 'Every tool, service, and resource used to build, style, and deploy this project.',
+    i18n_label: '// Internationalisation', i18n_title: 'Three Language Support',
+    i18n_desc: 'The entire interface is localised in three languages with dynamic switching and font optimisation per script.',
+    lang1_native: 'Japanese — Default Language',
+    team_label: '// Development Team', team_title: 'Developed By',
+    team_desc: 'This game was crafted by a passionate team of four developers combining creativity, technical skill, and dedication.'
+  }
+};
+
+let currentLang = 'ja';
+
+function setLang(lang) {
+  if (lang === currentLang) return;
+  currentLang = lang;
+  document.getElementById('btnJa').classList.toggle('active', lang === 'ja');
+  document.getElementById('btnEn').classList.toggle('active', lang === 'en');
+  document.documentElement.lang = lang;
+  document.body.className = 'lang-' + lang;
+  const elems = document.querySelectorAll('[data-i18n]');
+  elems.forEach(el => el.classList.add('lang-fade'));
+  setTimeout(() => {
+    const t = I18N[lang];
+    elems.forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (t[key] !== undefined) { el.innerHTML = t[key]; }
+    });
+    document.title = t['page_title'] || document.title;
+    elems.forEach(el => el.classList.remove('lang-fade'));
+  }, 150);
+}
+
+// Initialize
+document.getElementById('btnJa').classList.add('active');
+
+</script>
+</body>
+</html>
